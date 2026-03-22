@@ -6,7 +6,7 @@
 <title>Pesach 2026</title>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Pesach 2026">
 <meta name="theme-color" content="#f2f2f7">
 <style>
@@ -24,6 +24,8 @@
   --ms:      #34c759;
   --butcher: #ff9500;
   --done-bg: #f4fbf6;
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,8 +35,9 @@ body {
   background: var(--bg);
   color: var(--l1);
   min-height: 100vh;
-  padding-bottom: 96px;
+  padding-bottom: calc(96px + var(--safe-bottom));
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /* ── HEADER ── */
@@ -46,7 +49,7 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: 14px 20px 0;
+  padding: calc(14px + var(--safe-top)) 20px 0;
 }
 
 .header-top {
@@ -101,10 +104,11 @@ header {
   box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 0.5px 1px rgba(0,0,0,0.06);
 }
 
-/* ── FILTER TABS ── */
+/* ── FILTER TABS (now inside sticky header) ── */
 .store-tabs, .day-tabs {
-  background: var(--bg);
-  padding: 0 16px 12px;
+  background: transparent;
+  padding: 0 20px 12px;
+  margin: 0 -20px;
   display: flex; gap: 7px;
   overflow-x: auto; scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
@@ -232,7 +236,9 @@ header {
 
 /* ── FABs ── */
 .fab-row {
-  position: fixed; bottom: 20px; left: 16px; right: 16px;
+  position: fixed;
+  bottom: calc(20px + var(--safe-bottom));
+  left: 16px; right: 16px;
   display: flex; gap: 10px; z-index: 200;
 }
 .fab {
@@ -245,18 +251,97 @@ header {
 .fab:active { opacity: 0.75; transform: scale(0.97); }
 
 .hidden { display: none !important; }
+
+/* ── MEAL PLAN VIEW ── */
+.plan-day { margin-bottom: 32px; }
+.plan-day-hdr {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--green); padding: 0 4px 7px;
+  display: flex; align-items: center; gap: 6px;
+}
+.plan-day-hdr::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--green); flex-shrink:0; }
+.plan-meals { border-radius: 12px; overflow: hidden; }
+.plan-type-hdr {
+  padding: 8px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--l3); background: rgba(242,242,247,0.7);
+  border-bottom: 0.5px solid var(--sep);
+}
+.plan-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px; border-bottom: 0.5px solid var(--sep);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  background: var(--card); transition: background 0.15s; user-select: none;
+}
+.plan-row:last-child { border-bottom: none; }
+.plan-row:active { background: rgba(0,0,0,0.03); }
+.plan-row-who  { font-size: 12px; color: var(--l3); width: 80px; flex-shrink: 0; line-height: 1.3; }
+.plan-row-name { font-size: 15px; font-weight: 400; color: var(--l1); flex: 1; line-height: 1.3; }
+.plan-row-chev { font-size: 16px; color: var(--l4); flex-shrink: 0; }
+
+/* ── BOTTOM SHEET ── */
+#sheet-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  z-index: 500; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+#sheet-overlay.open { opacity: 1; pointer-events: auto; }
+#meal-sheet {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--bg); border-radius: 20px 20px 0 0;
+  z-index: 600; max-height: 88vh; overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+  padding-bottom: calc(20px + var(--safe-bottom));
+}
+#meal-sheet.open { transform: translateY(0); }
+.sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--l4); margin: 10px auto 0; }
+.sheet-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 16px 20px 8px;
+}
+.sheet-title-wrap { flex: 1; }
+.sheet-title { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; color: var(--l1); }
+.sheet-meta  { font-size: 13px; color: var(--l3); margin-top: 3px; }
+.sheet-close {
+  background: rgba(118,118,128,0.12); border: none; border-radius: 50%;
+  width: 30px; height: 30px; cursor: pointer; color: var(--l3);
+  font-size: 15px; display: flex; align-items: center; justify-content: center;
+  font-family: inherit; font-weight: 500; flex-shrink: 0; margin-left: 12px; margin-top: 2px;
+}
+.sheet-subtitle {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--l3); padding: 10px 20px 7px;
+}
+.sheet-card { background: var(--card); border-radius: 12px; margin: 0 16px 20px; overflow: hidden; }
 </style>
 </head>
 <body>
 
 <header>
   <div class="header-top">
-    <div>
-      <div class="header-title">Pesach 2026</div>
-      <div class="header-sub">Shopping Checklist</div>
-      <div class="sync-row">
-        <span id="sync-dot" class="sync-dot"></span>
-        <span id="sync-ts" class="sync-ts">connecting…</span>
+    <div style="display:flex;align-items:flex-start;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0;margin-top:1px;">
+        <!-- outer plate -->
+        <circle cx="19" cy="19" r="18" stroke="rgba(60,60,67,0.18)" stroke-width="1.2" fill="white"/>
+        <circle cx="19" cy="19" r="14.5" stroke="rgba(60,60,67,0.10)" stroke-width="1" fill="none"/>
+        <!-- 6 wells around the plate -->
+        <circle cx="19"   cy="6.5"  r="2.8" fill="#ff3b30" opacity=".75"/>
+        <circle cx="29.6" cy="12.5" r="2.8" fill="#ff9500" opacity=".75"/>
+        <circle cx="29.6" cy="25.5" r="2.8" fill="#34c759" opacity=".75"/>
+        <circle cx="19"   cy="31.5" r="2.8" fill="#007aff" opacity=".75"/>
+        <circle cx="8.4"  cy="25.5" r="2.8" fill="#af52de" opacity=".75"/>
+        <circle cx="8.4"  cy="12.5" r="2.8" fill="#ff2d55" opacity=".75"/>
+        <!-- centre matzah stack -->
+        <rect x="14" y="16" width="10" height="1.4" rx="0.7" fill="rgba(60,60,67,0.35)"/>
+        <rect x="14" y="18.3" width="10" height="1.4" rx="0.7" fill="rgba(60,60,67,0.25)"/>
+        <rect x="14" y="20.6" width="10" height="1.4" rx="0.7" fill="rgba(60,60,67,0.18)"/>
+      </svg>
+      <div>
+        <div class="header-title">Pesach 2026</div>
+        <div class="header-sub">Shopping Checklist</div>
+        <div class="sync-row">
+          <span id="sync-dot" class="sync-dot"></span>
+          <span id="sync-ts" class="sync-ts">connecting…</span>
+        </div>
       </div>
     </div>
     <div class="progress-right">
@@ -268,33 +353,47 @@ header {
   <div class="view-toggle">
     <button class="vt-btn active" id="vt-store" onclick="switchView('store')">By Store</button>
     <button class="vt-btn"        id="vt-meal"  onclick="switchView('meal')">By Meal</button>
+    <button class="vt-btn"        id="vt-plan"  onclick="switchView('plan')">Meal Plan</button>
+  </div>
+  <div class="store-tabs" id="store-tabs">
+    <button class="stab stab-all active"  onclick="filterStore('all')">All</button>
+    <button class="stab stab-kk"          onclick="filterStore('kk')">Kosher Kingdom</button>
+    <button class="stab stab-tesco"       onclick="filterStore('tesco')">Tesco</button>
+    <button class="stab stab-ms"          onclick="filterStore('ms')">M&amp;S</button>
+    <button class="stab stab-butcher"     onclick="filterStore('butcher')">Butcher</button>
+  </div>
+  <div class="day-tabs hidden" id="day-tabs">
+    <button class="dtab active" onclick="filterDay('all')">All days</button>
+    <button class="dtab" onclick="filterDay('fri01')">Fri 28 Mar</button>
+    <button class="dtab" onclick="filterDay('wed01')">Wed 1 Apr</button>
+    <button class="dtab" onclick="filterDay('fri03')">Fri 3 Apr</button>
+    <button class="dtab" onclick="filterDay('sat04')">Sat 4 Apr</button>
+    <button class="dtab" onclick="filterDay('sun05')">Sun 5 Apr</button>
+    <button class="dtab" onclick="filterDay('mon06')">Mon 6 Apr</button>
+    <button class="dtab" onclick="filterDay('tue07')">Tue 7 Apr</button>
+    <button class="dtab" onclick="filterDay('wed08')">Wed 8 Apr</button>
+    <button class="dtab" onclick="filterDay('thu09')">Thu 9 Apr</button>
   </div>
 </header>
 
-<div class="store-tabs" id="store-tabs">
-  <button class="stab stab-all active"  onclick="filterStore('all')">All</button>
-  <button class="stab stab-kk"          onclick="filterStore('kk')">Kosher Kingdom</button>
-  <button class="stab stab-tesco"       onclick="filterStore('tesco')">Tesco</button>
-  <button class="stab stab-ms"          onclick="filterStore('ms')">M&amp;S</button>
-  <button class="stab stab-butcher"     onclick="filterStore('butcher')">Butcher</button>
-</div>
-
-<div class="day-tabs hidden" id="day-tabs">
-  <button class="dtab active" onclick="filterDay('all')">All days</button>
-  <button class="dtab" onclick="filterDay('fri01')">Fri 28 Mar</button>
-  <button class="dtab" onclick="filterDay('wed01')">Wed 1 Apr</button>
-  <button class="dtab" onclick="filterDay('fri03')">Fri 3 Apr</button>
-  <button class="dtab" onclick="filterDay('sat04')">Sat 4 Apr</button>
-  <button class="dtab" onclick="filterDay('sun05')">Sun 5 Apr</button>
-  <button class="dtab" onclick="filterDay('mon06')">Mon 6 Apr</button>
-  <button class="dtab" onclick="filterDay('tue07')">Tue 7 Apr</button>
-  <button class="dtab" onclick="filterDay('wed08')">Wed 8 Apr</button>
-  <button class="dtab" onclick="filterDay('thu09')">Thu 9 Apr</button>
-</div>
-
 <div class="content">
   <div id="store-view"></div>
-  <div id="meal-view" class="hidden"></div>
+  <div id="meal-view"  class="hidden"></div>
+  <div id="plan-view"  class="hidden"></div>
+</div>
+
+<div id="sheet-overlay" onclick="closeSheet()"></div>
+<div id="meal-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-top">
+    <div class="sheet-title-wrap">
+      <div class="sheet-title" id="sheet-title"></div>
+      <div class="sheet-meta"  id="sheet-meta"></div>
+    </div>
+    <button class="sheet-close" onclick="closeSheet()">✕</button>
+  </div>
+  <div class="sheet-subtitle">Ingredients to buy</div>
+  <div class="sheet-card" id="sheet-items"></div>
 </div>
 
 <div class="fab-row">
@@ -779,17 +878,98 @@ function filterDay(d) {
   renderMealView();
 }
 
+// ── MEAL PLAN VIEW ────────────────────────────────────────────────────────────
+
+function renderMealPlanView() {
+  var container = document.getElementById('plan-view');
+  container.innerHTML = '';
+  var days = ['wed01','fri03','sat04','sun05','mon06','tue07','wed08','thu09'];
+  var dayLabels = {
+    wed01:'Wed 1 Apr', fri03:'Fri 3 Apr', sat04:'Sat 4 Apr', sun05:'Sun 5 Apr',
+    mon06:'Mon 6 Apr', tue07:'Tue 7 Apr', wed08:'Wed 8 Apr', thu09:'Thu 9 Apr'
+  };
+  var typeOrder  = ['breakfast','lunch','dinner'];
+  var typeLabels = { breakfast:'Breakfast', lunch:'Lunch', dinner:'Dinner' };
+
+  for (var di = 0; di < days.length; di++) {
+    var dayId = days[di];
+    var dayMeals = [];
+    for (var mi = 0; mi < MEALS.length; mi++) { if (MEALS[mi].day === dayId) dayMeals.push(MEALS[mi]); }
+    if (!dayMeals.length) continue;
+
+    // bucket by meal type
+    var buckets = { breakfast:[], lunch:[], dinner:[] };
+    for (var mi2 = 0; mi2 < dayMeals.length; mi2++) {
+      var m = dayMeals[mi2];
+      var sl = m.slot.toLowerCase();
+      var type = sl.indexOf('breakfast') === 0 ? 'breakfast' : sl.indexOf('lunch') === 0 ? 'lunch' : sl.indexOf('dinner') === 0 ? 'dinner' : null;
+      if (!type) continue;
+      buckets[type].push({ name: m.slot.replace(/^(Breakfast|Lunch|Dinner)\s*[-–]\s*/i,''), who: m.who||'All', items: m.items, dayLabel: dayLabels[dayId] });
+    }
+
+    var dayEl = document.createElement('div'); dayEl.className = 'plan-day';
+    var dayHdr = document.createElement('div'); dayHdr.className = 'plan-day-hdr';
+    dayHdr.textContent = dayLabels[dayId];
+    dayEl.appendChild(dayHdr);
+
+    var mealsWrap = document.createElement('div'); mealsWrap.className = 'plan-meals';
+    var hasAny = false;
+    for (var ti = 0; ti < typeOrder.length; ti++) {
+      var t = typeOrder[ti];
+      if (!buckets[t].length) continue;
+      hasAny = true;
+      var typeHdr = document.createElement('div'); typeHdr.className = 'plan-type-hdr';
+      typeHdr.textContent = typeLabels[t];
+      mealsWrap.appendChild(typeHdr);
+      for (var ri = 0; ri < buckets[t].length; ri++) {
+        var meal = buckets[t][ri];
+        var row = document.createElement('div'); row.className = 'plan-row';
+        row.innerHTML = '<div class="plan-row-who">' + meal.who + '</div><div class="plan-row-name">' + meal.name + '</div><div class="plan-row-chev">›</div>';
+        row.onclick = (function(meal){ return function(){ showMealDetail(meal); }; })(meal);
+        mealsWrap.appendChild(row);
+      }
+    }
+    if (hasAny) { dayEl.appendChild(mealsWrap); container.appendChild(dayEl); }
+  }
+}
+
+function showMealDetail(meal) {
+  document.getElementById('sheet-title').textContent = meal.name;
+  document.getElementById('sheet-meta').textContent  = meal.dayLabel + ' · ' + meal.who;
+  var card = document.getElementById('sheet-items');
+  card.innerHTML = '';
+  var seen = {};
+  for (var i = 0; i < meal.items.length; i++) {
+    var id = meal.items[i];
+    if (seen[id]) continue; seen[id] = true;
+    var item = ITEM_MAP[id];
+    if (item) card.appendChild(makeItem(item, true));
+  }
+  document.getElementById('meal-sheet').classList.add('open');
+  document.getElementById('sheet-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSheet() {
+  document.getElementById('meal-sheet').classList.remove('open');
+  document.getElementById('sheet-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 // ── VIEW SWITCH ───────────────────────────────────────────────────────────────
 
 function switchView(v) {
   currentView = v;
   document.getElementById('vt-store').classList.toggle('active', v === 'store');
   document.getElementById('vt-meal').classList.toggle('active',  v === 'meal');
+  document.getElementById('vt-plan').classList.toggle('active',  v === 'plan');
   document.getElementById('store-tabs').classList.toggle('hidden', v !== 'store');
   document.getElementById('day-tabs').classList.toggle('hidden',   v !== 'meal');
   document.getElementById('store-view').classList.toggle('hidden', v !== 'store');
   document.getElementById('meal-view').classList.toggle('hidden',  v !== 'meal');
+  document.getElementById('plan-view').classList.toggle('hidden',  v !== 'plan');
   if (v === 'meal') renderMealView();
+  if (v === 'plan') renderMealPlanView();
 }
 
 // ── FAB ACTIONS ───────────────────────────────────────────────────────────────
