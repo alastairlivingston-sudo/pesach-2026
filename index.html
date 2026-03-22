@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Pesach 2026</title>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Pesach 2026">
+<meta name="theme-color" content="#1a1612">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #f5f0e8;
+  --paper: #faf7f2;
+  --ink: #1a1612;
+  --ink-light: #6b6358;
+  --ink-faint: #b8b0a4;
+  --tesco: #00539f;
+  --ms: #2d8c46;
+  --kk: #c8372d;
+  --butcher: #c07828;
+  --check: #3a6b3a;
+  --check-light: #d4ebd4;
+  --border: #ddd5c8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  padding-bottom: 90px;
+}
+
+header {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 16px 16px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.header-title { font-family: 'DM Serif Display', serif; font-size: 20px; line-height: 1.1; }
+.header-sub   { font-size: 10px; color: var(--ink-faint); margin-top: 2px; letter-spacing: 0.05em; text-transform: uppercase; }
+.progress-right { text-align: right; }
+.progress-count { font-size: 24px; font-weight: 300; line-height: 1; }
+.progress-label { font-size: 10px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.05em; }
+.progress-bar-bg   { height: 3px; background: rgba(255,255,255,0.12); border-radius: 2px; margin-bottom: 10px; }
+.progress-bar-fill { height: 3px; background: #8fbc8f; border-radius: 2px; transition: width 0.3s; width: 0%; }
+
+.view-toggle { display: flex; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.vt-btn {
+  flex: 1; padding: 10px 0;
+  background: none; border: none;
+  color: rgba(255,255,255,0.45);
+  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+  cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s;
+}
+.vt-btn.active { color: #fff; border-bottom-color: #8fbc8f; }
+
+.store-tabs, .day-tabs {
+  background: var(--ink);
+  padding: 8px 16px 10px;
+  display: flex; gap: 6px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.store-tabs::-webkit-scrollbar, .day-tabs::-webkit-scrollbar { display: none; }
+
+.stab, .dtab {
+  flex-shrink: 0; padding: 4px 11px; border-radius: 20px;
+  font-size: 11px; font-weight: 500; cursor: pointer; border: none;
+  font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+}
+.stab-all           { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.65); }
+.stab-all.active    { background: #fff; color: var(--ink); }
+.stab-kk            { background: rgba(200,55,45,0.25); color: #e89090; }
+.stab-kk.active     { background: var(--kk); color: #fff; }
+.stab-tesco         { background: rgba(0,83,159,0.25); color: #80b8e8; }
+.stab-tesco.active  { background: var(--tesco); color: #fff; }
+.stab-ms            { background: rgba(45,140,70,0.25); color: #7ecb90; }
+.stab-ms.active     { background: var(--ms); color: #fff; }
+.stab-butcher       { background: rgba(192,120,40,0.25); color: #dba860; }
+.stab-butcher.active { background: var(--butcher); color: #fff; }
+.dtab               { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.65); }
+.dtab.active        { background: #fff; color: var(--ink); }
+
+.content { padding: 12px; }
+
+.dl-banner {
+  background: #2a5c8a; color: #fff;
+  border-radius: 10px; padding: 12px 14px;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px; text-decoration: none; cursor: pointer;
+}
+.dl-icon  { font-size: 18px; flex-shrink: 0; }
+.dl-body  { flex: 1; }
+.dl-title { font-size: 13px; font-weight: 600; }
+.dl-sub   { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 1px; }
+.dl-arrow { font-size: 18px; color: rgba(255,255,255,0.6); }
+
+.install-banner {
+  background: var(--ink); color: var(--bg);
+  border-radius: 10px; padding: 12px 14px;
+  display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;
+}
+.install-icon  { font-size: 18px; flex-shrink: 0; }
+.install-body  { flex: 1; }
+.install-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.install-steps { font-size: 11px; color: var(--ink-faint); line-height: 1.6; }
+.install-steps strong { color: #fff; }
+.install-close { background: none; border: none; color: var(--ink-faint); font-size: 20px; cursor: pointer; padding: 0; line-height: 1; flex-shrink: 0; }
+
+.section { margin-bottom: 14px; }
+
+.section-hdr {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 14px; border-radius: 10px 10px 0 0;
+  color: #fff; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+.section-hdr.kk      { background: var(--kk); }
+.section-hdr.tesco   { background: var(--tesco); }
+.section-hdr.ms      { background: var(--ms); }
+.section-hdr.butcher { background: var(--butcher); }
+.section-hdr.day     { background: #4a6741; }
+.section-dot   { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.45); flex-shrink: 0; }
+.section-tally { margin-left: auto; font-size: 11px; opacity: 0.7; font-weight: 400; }
+
+.group {
+  background: var(--paper);
+  border: 1px solid var(--border); border-top: none;
+}
+.group:last-child { border-radius: 0 0 10px 10px; }
+
+.group-hdr {
+  padding: 7px 14px; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-light); background: rgba(0,0,0,0.03);
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; user-select: none;
+}
+.group-arrow { color: var(--ink-faint); transition: transform 0.2s; font-size: 12px; }
+.group.collapsed .group-arrow { transform: rotate(-90deg); }
+.group.collapsed .group-body  { display: none; }
+
+.meal-card {
+  background: var(--paper);
+  border: 1px solid var(--border); border-top: none; overflow: hidden;
+}
+.meal-card:last-child { border-radius: 0 0 10px 10px; }
+
+.meal-label {
+  padding: 7px 14px; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--ink-light); background: rgba(0,0,0,0.02);
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; user-select: none;
+}
+.meal-label-txt  { flex: 1; }
+.meal-label-who  { font-size: 10px; color: var(--ink-faint); margin-left: 6px; font-weight: 400; text-transform: none; letter-spacing: 0; }
+.meal-arrow      { color: var(--ink-faint); transition: transform 0.2s; font-size: 12px; }
+.meal-card.collapsed .meal-arrow { transform: rotate(-90deg); }
+.meal-card.collapsed .meal-body  { display: none; }
+
+.item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 11px 14px; border-bottom: 1px solid rgba(0,0,0,0.05);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  user-select: none; transition: background 0.1s;
+}
+.item:last-child { border-bottom: none; }
+.item:active { background: rgba(0,0,0,0.04); }
+.item.done { background: var(--check-light); }
+.item.done .item-name { text-decoration: line-through; color: var(--ink-faint); }
+.item.done .item-note { opacity: 0.5; }
+
+.cb {
+  width: 20px; height: 20px; border-radius: 5px;
+  border: 2px solid var(--border); flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; transition: all 0.15s;
+}
+.item.done .cb { background: var(--check); border-color: var(--check); }
+.cb-tick { display: none; color: #fff; font-size: 11px; font-weight: 700; }
+.item.done .cb-tick { display: block; }
+
+.item-body  { flex: 1; min-width: 0; }
+.item-name  { font-size: 14px; font-weight: 500; line-height: 1.3; }
+.item-note  { font-size: 11px; color: var(--ink-light); margin-top: 2px; line-height: 1.4; }
+.item-store-badge {
+  display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px;
+  font-weight: 600; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.03em;
+}
+.badge-kk      { background: #fdecea; color: var(--kk); }
+.badge-tesco   { background: #e8f1fb; color: var(--tesco); }
+.badge-ms      { background: #e8f5ec; color: var(--ms); }
+.badge-butcher { background: #fdf3e4; color: var(--butcher); }
+
+.item-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.tag { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase; }
+.tag-warn    { background: #fff3cd; color: #856404; }
+.tag-kitniot { background: #ede8f8; color: #5a3ea0; }
+.tag-meat    { background: #fdecea; color: #9a1c1c; }
+.tag-dairy   { background: #e3f0fb; color: #1a5c99; }
+.tag-parve   { background: #f0f0f0; color: #555; }
+.tag-kp      { background: #fff8e6; color: #7a4f00; }
+
+.fab-row {
+  position: fixed; bottom: 14px; left: 12px; right: 12px;
+  display: flex; gap: 8px; z-index: 200;
+}
+.fab {
+  flex: 1; padding: 13px; border-radius: 12px; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+.fab-reset { background: var(--paper); color: var(--ink-light); border: 1px solid var(--border); }
+.fab-done  { background: var(--ink); color: #fff; }
+.fab:active { opacity: 0.85; }
+
+.hidden { display: none !important; }
+
+.sync-row { display: flex; align-items: center; gap: 5px; margin-top: 5px; }
+.sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #555; flex-shrink: 0; transition: background 0.4s; }
+.sync-ts  { font-size: 9px; color: var(--ink-faint); letter-spacing: 0.03em; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div>
+      <div class="header-title">Pesach 2026</div>
+      <div class="header-sub">Shopping Checklist</div>
+      <div class="sync-row">
+        <span id="sync-dot" class="sync-dot"></span>
+        <span id="sync-ts" class="sync-ts">connecting…</span>
+      </div>
+    </div>
+    <div class="progress-right">
+      <div class="progress-count"><span id="n-done">0</span>/<span id="n-total">0</span></div>
+      <div class="progress-label">items</div>
+    </div>
+  </div>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="pbar"></div></div>
+  <div class="view-toggle">
+    <button class="vt-btn active" id="vt-store" onclick="switchView('store')">By Store</button>
+    <button class="vt-btn"        id="vt-meal"  onclick="switchView('meal')">By Meal</button>
+  </div>
+</header>
+
+<div class="store-tabs" id="store-tabs">
+  <button class="stab stab-all active"  onclick="filterStore('all')">All</button>
+  <button class="stab stab-kk"          onclick="filterStore('kk')">&#128994; Kosher Kingdom</button>
+  <button class="stab stab-tesco"       onclick="filterStore('tesco')">&#128309; Tesco</button>
+  <button class="stab stab-ms"          onclick="filterStore('ms')">&#128308; M&amp;S</button>
+  <button class="stab stab-butcher"     onclick="filterStore('butcher')">&#128992; Butcher</button>
+</div>
+
+<div class="day-tabs hidden" id="day-tabs">
+  <button class="dtab active" onclick="filterDay('all')">All days</button>
+  <button class="dtab" onclick="filterDay('fri01')">Fri 28 Mar</button>
+  <button class="dtab" onclick="filterDay('wed01')">Wed 1 Apr</button>
+  <button class="dtab" onclick="filterDay('fri03')">Fri 3 Apr</button>
+  <button class="dtab" onclick="filterDay('sat04')">Sat 4 Apr</button>
+  <button class="dtab" onclick="filterDay('sun05')">Sun 5 Apr</button>
+  <button class="dtab" onclick="filterDay('mon06')">Mon 6 Apr</button>
+  <button class="dtab" onclick="filterDay('tue07')">Tue 7 Apr</button>
+  <button class="dtab" onclick="filterDay('wed08')">Wed 8 Apr</button>
+  <button class="dtab" onclick="filterDay('thu09')">Thu 9 Apr</button>
+</div>
+
+<div class="content">
+  <div class="install-banner" id="ibanner">
+    <div class="install-icon">&#128242;</div>
+    <div class="install-body">
+      <div class="install-title">Add to home screen</div>
+      <div class="install-steps" id="isteps"></div>
+    </div>
+    <button class="install-close" onclick="document.getElementById('ibanner').style.display='none'">&#215;</button>
+  </div>
+  <div id="store-view"></div>
+  <div id="meal-view" class="hidden"></div>
+</div>
+
+<div class="fab-row">
+  <button class="fab fab-reset" onclick="resetAll()">Reset</button>
+  <button class="fab fab-done"  onclick="doneAll()">Mark all done</button>
+</div>
+
+<script>
+// ── ITEMS ────────────────────────────────────────────────────────────────────
+// Changes applied:
+// - Chocolate covered matzah → chocolate covered rice cakes
+// - No burger/chicken/black pepper seasoning
+// - Frozen chips → Tesco (not KK)
+// - Potato smilies already got — removed
+// - No frozen mixed veg
+// - Chia seeds, mixed nuts, dates, raisins → Tesco
+// - No coconut, ground almonds, vanilla, agave, choc chips, coconut milk, potato flour
+// - No imitation soy, sweet chilli, worcestershire sauce
+// - Minced beef already got — removed
+// - Cottage cheese → Tesco (Longley Farm)
+// - No fruit cups / applesauce
+// - Eggs → Tesco
+// - All household items removed
+// - No cinnamon, ginger, salt, oil, cocoa powder
+// - Spinach and cabbage fresh (not frozen)
+// - Fresh cauliflower and honey removed
+// - Cajun/BBQ seasoning kept (for Mexican salmon)
+// - Crispy beef → pre-made meal from KK/butcher
+
+var ITEMS = [
+  // ── KK SNACKS ──
+  { id:'kk_plantain',    n:'Plantain Chips',                     d:'Parve. Mexican Salmon & Guac - Mon dinner (Alastair)',                             store:'kk', t:['parve'] },
+  { id:'kk_bamba',       n:'Bamba',                              d:'Kitniot. General snacking / packed lunch (kids)',                                   store:'kk', t:['kitniot'] },
+  { id:'kk_crisps',      n:'Potato Crisps - plain/unsalted',     d:'General snacking / packed lunch (kids)',                                            store:'kk', t:['parve'] },
+  { id:'kk_bissli',      n:'Onion Rings / Bissli',               d:'General snacking / packed lunch (kids)',                                            store:'kk', t:['parve'] },
+  { id:'kk_vegstix',     n:'Veggie Crisps / Potato Stix',        d:'General snacking / packed lunch (kids)',                                            store:'kk', t:['parve'] },
+
+  // ── KK MATZAH ──
+  { id:'kk_matzah',      n:'Matzah - Machine or Hand',           d:'Eggs/Matzah (Sun); Matzah & Cottage Cheese (Tue/Thu - Elly & kids); Matzah & Cream Cheese (Wed - Elly)', store:'kk', t:['parve'] },
+  { id:'kk_ricecakes',   n:'Chocolate Covered Rice Cakes',       d:'Snacks / packed lunch treat (kids)',                                                store:'kk', t:['parve'] },
+  { id:'kk_teamatzah',   n:'Tea Matzah - small box',             d:'Snacks / general',                                                                  store:'kk', t:['parve'] },
+
+  // ── KK SPICES ──
+  { id:'kk_cajun',       n:'Cajun / BBQ Seasoning',              d:'KP cert required. Mexican Salmon - Mon dinner (Alastair)',                          store:'kk', t:['parve','kp'] },
+
+  // ── KK TINNED ──
+  { id:'kk_tinned_tom',  n:'Tinned Tomatoes - Crushed/Diced',    d:'KP cert needed (citric acid risk). Bolognaise - Mon dinner',                       store:'kk', t:['parve','kp'] },
+  { id:'kk_stock',       n:'Chicken Soup Mix / Stock',           d:'KP cert. General Pesach cooking',                                                   store:'kk', t:['meat','kp'] },
+
+  // ── KK FROZEN ──
+  { id:'kk_schnitzel',   n:'Chicken Schnitzel - Frozen',         d:'Schnitzel & Chips - Tue (Alastair & kids)',                                         store:'kk', t:['meat'] },
+  { id:'kk_hermolis1',   n:'Hermolis Meal #1',                   d:'Alastair - Tue lunch. Confirm stock / pre-order',                                   store:'kk', t:['meat','warn'] },
+  { id:'kk_hermolis2',   n:'Hermolis Meal #2',                   d:'Alastair - Wed lunch. Confirm stock / pre-order',                                   store:'kk', t:['meat','warn'] },
+  { id:'kk_hermolis3',   n:'Hermolis Meal #3',                   d:'Alastair - Thu lunch. Confirm stock / pre-order',                                   store:'kk', t:['meat','warn'] },
+
+  // ── KK BAKING ──
+  { id:'kk_matzameal',   n:'Matzah Meal - Fine/Medium',          d:'Schnitzel coating; general cooking',                                                store:'kk', t:['parve'] },
+
+  // ── KK SAUCES ──
+  { id:'kk_ketchup',     n:'Ketchup - Kosher lePesach',          d:'KP cert. Burgers, chips, general',                                                  store:'kk', t:['parve','kp'] },
+  { id:'kk_mayo',        n:'Mayonnaise - Kosher lePesach',       d:'KP cert. Burgers, general',                                                         store:'kk', t:['parve','kp'] },
+
+  // ── KK MEAT ──
+  { id:'kk_chicken',     n:'Whole Chicken / Chicken Portions',   d:'Roast Chicken & Sweet Potato - Sun (Alastair & kids)',                              store:'kk', t:['meat'] },
+  { id:'kk_burgers',     n:'Beef Burgers',                       d:'Burgers & Potato Smilies - Sat (all). KP cert if processed',                        store:'kk', t:['meat','kp'] },
+  { id:'kk_crispybeef',  n:'Crispy Beef - pre-made meal',        d:'Thu dinner (all). Check KK first, then: Blue Smoke Meat, Sam Stoller 020 8458 1429, Menachem\'s Glatt NW11', store:'kk', t:['meat','warn'] },
+  { id:'kk_rice',        n:'Rice - KP certified',                d:'Kitniot - family accepts. Elly Bolognaise (Mon) & Egg Fried Rice (Thu)',             store:'kk', t:['kitniot','kp'] },
+
+  // ── KK PACKED LUNCH ──
+  { id:'kk_cream',       n:'Cream Cheese - KK / KP certified',  d:'Dairy. Packed Lunch (Tue/Wed - kids) with matzah',                                  store:'kk', t:['dairy'] },
+  { id:'kk_strchee',     n:'Cheese Slices / String Cheese',      d:'Dairy. Packed Lunch (Tue/Wed - kids)',                                              store:'kk', t:['dairy'] },
+
+  // ── KK WINES ──
+  // (removed - not hosting seder/shabbat)
+
+  // ── TESCO CUPBOARD ──
+  { id:'t_garlic',       n:'Garlic Powder / Granules',           d:'SKA approved any brand. Bolognaise; Roast Chicken; general',                        store:'tesco', t:['parve'] },
+  { id:'t_evoo',         n:'Extra Virgin Olive Oil',             d:'SKA approved. General cooking; Aubergine Pizza; Roast Chicken',                     store:'tesco', t:['parve'] },
+  { id:'t_sunflower',    n:'Sunflower Oil',                      d:'SKA approved. Frying schnitzel, chips; roasting',                                   store:'tesco', t:['parve'] },
+  { id:'t_tompuree',     n:'Tomato Puree - CHECK LABEL',         d:'Must have NO citric acid. If it does, buy KP cert from KK instead',                 store:'tesco', t:['parve','warn'] },
+
+  // ── TESCO FROZEN ──
+  { id:'t_chips',        n:'Frozen Chips',                       d:'Schnitzel & Chips (Tue - Alastair & kids); Eggs & Chips (Tue - Elly)',              store:'tesco', t:['parve'] },
+
+  // ── TESCO DAIRY ──
+  { id:'t_longleycot',   n:'Longley Farm Natural Cottage Cheese',d:'SKA approved. Matzah & Cottage Cheese (Tue/Thu - Elly & kids). Fallback: Waitrose', store:'tesco', t:['dairy'] },
+  { id:'t_longleycream', n:'Longley Farm Full Fat Cream Cheese', d:'SKA approved. Matzah & Cream Cheese - Wed (Elly). Fallback: Waitrose',              store:'tesco', t:['dairy'] },
+  { id:'t_cheddar',      n:'Cheddar - large block (grate yourself)', d:'NOT pre-grated. Eggs/Matzah/Cheese (Sun); Tuna/Jacket Potato (Mon/Wed/Thu - Elly & kids); Aubergine Pizza (Fri)', store:'tesco', t:['dairy'] },
+  { id:'t_yoghurt',      n:'Plain / Greek Yoghurt',              d:'Yoghurt, fruit & honey (Thu breakfast - all); Chia Pudding base',                   store:'tesco', t:['dairy'] },
+  { id:'t_butter',       n:'Butter - plain/salted',              d:'Banana Pancakes; general cooking',                                                  store:'tesco', t:['dairy'] },
+
+  // ── TESCO FISH ──
+  { id:'t_salmon',       n:'Fresh Salmon Fillets - skin on',     d:'Scales must be visible (SKA rule). Mexican Salmon & Guac - Mon dinner (Alastair)',  store:'tesco', t:['parve'] },
+  { id:'t_tuna',         n:'Tinned Tuna - brine or oil, no citric acid', d:'Check label. Tuna/Jacket Potato/Cheese: Mon (all), Wed & Thu (Elly & kids)', store:'tesco', t:['parve'] },
+
+  // ── TESCO SNACKS / BAKING ──
+  { id:'t_chia',         n:'Chia Seeds',                         d:'Chia Pudding - Fri/Sun/Tue breakfast (all)',                                        store:'tesco', t:['parve'] },
+  { id:'t_nuts',         n:'Mixed Nuts - Almonds, Cashews, Pecans', d:'Raw/blanched only - NOT roasted. Chia Pudding toppings; packed lunch (kids)',    store:'tesco', t:['parve'] },
+  { id:'t_dates',        n:'Medjool Dates',                      d:'Chia Pudding; general snacking',                                                    store:'tesco', t:['parve'] },
+  { id:'t_raisins',      n:'Raisins',                            d:'Chia Pudding; snacking. Those coated in sunflower oil are OK',                      store:'tesco', t:['parve'] },
+  { id:'t_kettle',       n:'Kettle Lightly Salted Crisps',       d:'Named on SKA approved list. Snacking / packed lunch (kids)',                        store:'tesco', t:['parve'] },
+
+  // ── TESCO VEG ──
+  { id:'t_avocado',      n:'Avocados x6-8',                      d:'Scrambled Eggs & Avocado (Wed - all); Eggs/Matzah/Avocado (Sun - all); Homemade Guac (Mon dinner)', store:'tesco', t:[] },
+  { id:'t_sweetpotato',  n:'Sweet Potatoes x4-6 large',          d:'Roast Chicken & Sweet Potato (Sun - all); Bolognaise sides (Mon)',                  store:'tesco', t:[] },
+  { id:'t_jacket',       n:'Jacket / Baking Potatoes x6',        d:'Tuna/Jacket Potato/Cheese: Mon (all), Wed & Thu (Elly & kids)',                     store:'tesco', t:[] },
+  { id:'t_aubergine',    n:'Aubergines x2-3',                    d:'Aubergine Pizza - Fri lunch (all)',                                                  store:'tesco', t:[] },
+  { id:'t_whitecab',     n:'Cabbage x1 (fresh)',                 d:'Bolognaise & Cabbage - Mon (Alastair & Elly)',                                       store:'tesco', t:[] },
+  { id:'t_spinach',      n:'Fresh Spinach',                      d:'General sides / Bolognaise',                                                        store:'tesco', t:[] },
+  { id:'t_salad',        n:'Salad Leaves / mixed bag',           d:'Roast Chicken & Salad (Sun - Alastair); general',                                   store:'tesco', t:[] },
+  { id:'t_tomatoes',     n:'Tomatoes',                           d:'Aubergine Pizza; salad; general',                                                   store:'tesco', t:[] },
+  { id:'t_onions',       n:'Onions x4-6',                        d:'Bolognaise; Egg Fried Rice/Caulirice; general',                                     store:'tesco', t:[] },
+  { id:'t_garlichead',   n:'Garlic - fresh bulbs',               d:'Bolognaise; Roast Chicken; general',                                                store:'tesco', t:[] },
+  { id:'t_peppers',      n:'Peppers - mixed',                    d:'Egg Fried Rice; Bolognaise; general',                                               store:'tesco', t:[] },
+  { id:'t_springonion',  n:'Spring Onions & Fresh Ginger',       d:'Egg Fried Caulirice/Rice - Thu',                                                    store:'tesco', t:[] },
+
+  // ── TESCO FRUIT ──
+  { id:'t_bananas',      n:'Bananas x2 bunches',                 d:'Banana Pancakes (Sat/Mon - all); Fruit Smoothies (Wed - all)',                      store:'tesco', t:[] },
+  { id:'t_berries',      n:'Mixed Berries / Mango / seasonal fruit', d:'Fruit Smoothies (Wed - all); Yoghurt & fruit (Thu - all)',                      store:'tesco', t:[] },
+  { id:'t_lemons',       n:'Lemons / Limes x4',                 d:'Mexican Salmon & Guac; Homemade Guacamole; general',                                store:'tesco', t:[] },
+  { id:'t_freshfruit',   n:'Fresh whole fruit - apples, grapes, clementines', d:'Packed lunch (kids); general snacking',                               store:'tesco', t:[] },
+
+  // ── TESCO EGGS ──
+  { id:'t_eggs',         n:'Eggs - 30 pack x2',                  d:'Scrambled Eggs (Wed); Banana Pancakes (Sat/Mon); Eggs/Matzah (Sun); Egg Fried Rice/Caulirice (Thu); Eggs & Chips (Tue - Elly); Aubergine Pizza (Fri)', store:'tesco', t:['parve'] },
+
+  // ── TESCO FROZEN VEG ──
+  { id:'t_caulirice',    n:'Tesco Cauliflower 900g or Cauliflower Rice Steam Bag', d:'SKA certified line. Egg Fried Caulirice - Thu (Alastair)',         store:'tesco', t:['parve'] },
+
+  // ── M&S ──
+  { id:'ms_choco',       n:'M&S Made Without Wheat Choco Pops',  d:'Kitniot - family accepts. Breakfast during Pesach',                                 store:'ms', t:['kitniot'] },
+  { id:'ms_rice',        n:'M&S Made Without Wheat Rice Pops',   d:'Kitniot - family accepts. Breakfast during Pesach',                                 store:'ms', t:['kitniot'] },
+  { id:'ms_broc',        n:'M&S Broccoli',                       d:'Fallback only if Tesco SKA lines out of stock',                                     store:'ms', t:['parve'] },
+  { id:'ms_cauli',       n:'M&S Cauliflower 750g',               d:'Fallback only',                                                                     store:'ms', t:['parve'] },
+  { id:'ms_carrots',     n:'M&S Chantenay Carrots 500g',         d:'Fallback only',                                                                     store:'ms', t:['parve'] },
+  { id:'ms_leeks',       n:'M&S Sliced Leeks 500g',              d:'Fallback only',                                                                     store:'ms', t:['parve'] },
+  { id:'ms_kale',        n:'M&S Kale',                           d:'Fallback only',                                                                     store:'ms', t:['parve'] },
+  { id:'ms_mspinach',    n:'M&S Leaf Spinach 900g',              d:'Fallback only',                                                                     store:'ms', t:['parve'] },
+
+  // ── BUTCHER ──
+  { id:'b_crispybeef',   n:'Crispy Beef - pre-made meal',        d:'If KK does not stock it. Blue Smoke Meat, Sam Stoller & Son 020 8458 1429, or Menachem\'s Glatt NW11. Thu dinner (all)', store:'butcher', t:['meat','warn'] }
+];
+
+var ITEM_MAP = {};
+for (var i = 0; i < ITEMS.length; i++) ITEM_MAP[ITEMS[i].id] = ITEMS[i];
+
+// ── MEALS ────────────────────────────────────────────────────────────────────
+
+var MEALS = [
+  { day:'fri01', dayLabel:'Fri 28 Mar (prep)', slot:'Prep shopping - all stores', who:'', items:[
+    'kk_plantain','kk_bamba','kk_crisps','kk_bissli','kk_vegstix',
+    'kk_matzah','kk_ricecakes','kk_teamatzah',
+    'kk_cajun','kk_tinned_tom','kk_stock',
+    'kk_schnitzel','kk_hermolis1','kk_hermolis2','kk_hermolis3',
+    'kk_matzameal','kk_ketchup','kk_mayo',
+    'kk_chicken','kk_burgers','kk_crispybeef','kk_rice',
+    'kk_cream','kk_strchee',
+    't_garlic','t_evoo','t_sunflower','t_tompuree','t_chips',
+    't_longleycot','t_longleycream','t_cheddar','t_yoghurt','t_butter',
+    't_salmon','t_tuna',
+    't_chia','t_nuts','t_dates','t_raisins','t_kettle',
+    't_avocado','t_sweetpotato','t_jacket','t_aubergine','t_whitecab','t_spinach',
+    't_salad','t_tomatoes','t_onions','t_garlichead','t_peppers','t_springonion',
+    't_bananas','t_berries','t_lemons','t_freshfruit','t_eggs','t_caulirice',
+    'ms_choco','ms_rice'
+  ]},
+
+  { day:'wed01', dayLabel:'Wed 1 Apr', slot:'Lunch - Scrambled Eggs & Avocado', who:'All', items:['t_eggs','t_avocado','t_butter'] },
+
+  { day:'fri03', dayLabel:'Fri 3 Apr', slot:'Breakfast - Banana Pancakes', who:'All', items:['t_eggs','t_bananas','t_butter'] },
+  { day:'fri03', dayLabel:'Fri 3 Apr', slot:'Lunch - Aubergine Pizza', who:'All', items:['t_aubergine','t_eggs','t_cheddar','t_tomatoes','t_evoo','t_tompuree'] },
+
+  { day:'sat04', dayLabel:'Sat 4 Apr', slot:'Breakfast - Banana Pancakes', who:'All', items:['t_eggs','t_bananas','t_butter'] },
+  { day:'sat04', dayLabel:'Sat 4 Apr', slot:'Dinner - Burgers & Potato Smilies', who:'All', items:['kk_burgers','kk_ketchup','kk_mayo'] },
+
+  { day:'sun05', dayLabel:'Sun 5 Apr', slot:'Breakfast - Chia Pudding', who:'All', items:['t_chia','t_yoghurt','t_dates','t_raisins','t_nuts'] },
+  { day:'sun05', dayLabel:'Sun 5 Apr', slot:'Lunch - Eggs, Matzah, Avocado & Cheese', who:'All', items:['t_eggs','kk_matzah','t_avocado','t_cheddar'] },
+  { day:'sun05', dayLabel:'Sun 5 Apr', slot:'Dinner - Roast Chicken & Sweet Potato', who:'Alastair & kids', items:['kk_chicken','t_sweetpotato','t_garlichead','t_evoo','t_salad'] },
+  { day:'sun05', dayLabel:'Sun 5 Apr', slot:'Dinner - Sweet Potato & Salad', who:'Elly', items:['t_sweetpotato','t_salad','t_evoo'] },
+
+  { day:'mon06', dayLabel:'Mon 6 Apr', slot:'Breakfast - Banana Pancakes', who:'All', items:['t_eggs','t_bananas','t_butter'] },
+  { day:'mon06', dayLabel:'Mon 6 Apr', slot:'Lunch - Tuna, Jacket Potato & Cheese', who:'All', items:['t_tuna','t_jacket','t_cheddar'] },
+  { day:'mon06', dayLabel:'Mon 6 Apr', slot:'Dinner - Bolognaise & Cabbage', who:'Alastair', items:['kk_tinned_tom','t_tompuree','t_onions','t_garlichead','t_peppers','t_evoo','t_whitecab'] },
+  { day:'mon06', dayLabel:'Mon 6 Apr', slot:'Dinner - Bolognaise, Rice & Cabbage', who:'Elly & kids', items:['kk_tinned_tom','t_tompuree','t_onions','t_garlichead','t_peppers','t_evoo','kk_rice','t_whitecab'] },
+  { day:'mon06', dayLabel:'Mon 6 Apr', slot:'Dinner - Mexican Salmon, Guac & Plantain Chips', who:'Alastair', items:['t_salmon','t_avocado','t_lemons','kk_cajun','t_garlichead','t_onions','kk_plantain'] },
+
+  { day:'tue07', dayLabel:'Tue 7 Apr', slot:'Breakfast - Chia Pudding', who:'All', items:['t_chia','t_yoghurt','t_dates','t_raisins','t_nuts'] },
+  { day:'tue07', dayLabel:'Tue 7 Apr', slot:'Lunch - Hermolis', who:'Alastair', items:['kk_hermolis1'] },
+  { day:'tue07', dayLabel:'Tue 7 Apr', slot:'Lunch - Matzah & Cottage Cheese', who:'Elly', items:['kk_matzah','t_longleycot'] },
+  { day:'tue07', dayLabel:'Tue 7 Apr', slot:'Lunch - Kids Packed Lunch', who:'Kids', items:['kk_matzah','t_longleycot','kk_cream','kk_strchee','t_freshfruit','t_kettle'] },
+  { day:'tue07', dayLabel:'Tue 7 Apr', slot:'Dinner - Chicken Schnitzel & Chips', who:'Alastair & kids', items:['kk_schnitzel','t_chips','kk_matzameal','kk_ketchup'] },
+  { day:'tue07', dayLabel:'Tue 7 Apr', slot:'Dinner - Eggs & Chips', who:'Elly', items:['t_eggs','t_chips','t_butter'] },
+
+  { day:'wed08', dayLabel:'Wed 8 Apr', slot:'Breakfast - Fruit Smoothies', who:'All', items:['t_bananas','t_berries','t_yoghurt'] },
+  { day:'wed08', dayLabel:'Wed 8 Apr', slot:'Lunch - Hermolis', who:'Alastair', items:['kk_hermolis2'] },
+  { day:'wed08', dayLabel:'Wed 8 Apr', slot:'Lunch - Matzah & Cream Cheese', who:'Elly', items:['kk_matzah','t_longleycream'] },
+  { day:'wed08', dayLabel:'Wed 8 Apr', slot:'Lunch - Kids Packed Lunch', who:'Kids', items:['kk_matzah','t_longleycot','kk_cream','kk_strchee','t_freshfruit','t_kettle'] },
+  { day:'wed08', dayLabel:'Wed 8 Apr', slot:'Dinner - Egg Fried Caulirice & Crispy Beef', who:'Alastair', items:['t_eggs','t_caulirice','kk_crispybeef','t_springonion','t_onions','t_peppers','t_evoo'] },
+  { day:'wed08', dayLabel:'Wed 8 Apr', slot:'Dinner - Egg Fried Rice & Crispy Beef', who:'Elly & kids', items:['t_eggs','kk_rice','kk_crispybeef','t_springonion','t_onions','t_peppers','t_evoo'] },
+  { day:'wed08', dayLabel:'Wed 8 Apr', slot:'Dinner - Tuna, Jacket Potato & Cheese', who:'Elly & kids', items:['t_tuna','t_jacket','t_cheddar'] },
+
+  { day:'thu09', dayLabel:'Thu 9 Apr', slot:'Breakfast - Yoghurt & Fruit', who:'All', items:['t_yoghurt','t_freshfruit','t_berries'] },
+  { day:'thu09', dayLabel:'Thu 9 Apr', slot:'Lunch - Hermolis', who:'Alastair', items:['kk_hermolis3'] },
+  { day:'thu09', dayLabel:'Thu 9 Apr', slot:'Lunch - Matzah & Cottage Cheese', who:'Elly & kids', items:['kk_matzah','t_longleycot'] }
+];
+
+// ── STORE VIEW STRUCTURE ─────────────────────────────────────────────────────
+
+var STORE_GROUPS = [
+  { store:'kk', label:'Kosher Kingdom', groups:[
+    { name:'Aisle 1 - Snacks',                    ids:['kk_plantain','kk_bamba','kk_crisps','kk_bissli','kk_vegstix'] },
+    { name:'Aisle 3 - Matzah & Crackers',          ids:['kk_matzah','kk_ricecakes','kk_teamatzah'] },
+    { name:'Aisle 5 - Spices (KP cert required)',  ids:['kk_cajun'] },
+    { name:'Aisle 5 - Tinned Goods',               ids:['kk_tinned_tom','kk_stock'] },
+    { name:'Aisle 5 - Frozen',                     ids:['kk_schnitzel','kk_hermolis1','kk_hermolis2','kk_hermolis3'] },
+    { name:'Aisle 8 - Matzah Meal',                ids:['kk_matzameal'] },
+    { name:'Aisle 9 - Sauces & Condiments',        ids:['kk_ketchup','kk_mayo'] },
+    { name:'Aisle 9 - Meat & Poultry',             ids:['kk_chicken','kk_burgers','kk_crispybeef','kk_rice'] },
+    { name:'Aisle 9 - Kids Packed Lunch',          ids:['kk_cream','kk_strchee'] }
+  ]},
+  { store:'tesco', label:'Tesco', groups:[
+    { name:'Oils & Store Cupboard',                ids:['t_garlic','t_evoo','t_sunflower','t_tompuree'] },
+    { name:'Frozen',                               ids:['t_chips','t_caulirice'] },
+    { name:'Dairy',                                ids:['t_longleycot','t_longleycream','t_cheddar','t_yoghurt','t_butter'] },
+    { name:'Eggs',                                 ids:['t_eggs'] },
+    { name:'Fish',                                 ids:['t_salmon','t_tuna'] },
+    { name:'Snacks & Dried Fruit',                 ids:['t_chia','t_nuts','t_dates','t_raisins','t_kettle'] },
+    { name:'Vegetables - Fresh',                   ids:['t_avocado','t_sweetpotato','t_jacket','t_aubergine','t_whitecab','t_spinach','t_salad','t_tomatoes','t_onions','t_garlichead','t_peppers','t_springonion'] },
+    { name:'Fruit',                                ids:['t_bananas','t_berries','t_lemons','t_freshfruit'] }
+  ]},
+  { store:'ms', label:'M&S', groups:[
+    { name:'Cereals - Kosher for Pesach (Kitniot)',ids:['ms_choco','ms_rice'] },
+    { name:'Frozen Veg - Fallback only',           ids:['ms_broc','ms_cauli','ms_carrots','ms_leeks','ms_kale','ms_mspinach'] }
+  ]},
+  { store:'butcher', label:'SKA-Licensed Butcher', groups:[
+    { name:'Ring ahead - only if KK cannot supply',ids:['b_crispybeef'] }
+  ]}
+];
+
+// ── STATE & PERSISTENCE ──────────────────────────────────────────────────────
+
+var checked = {};
+var currentView = 'store';
+var currentStoreFilter = 'all';
+var currentDayFilter = 'all';
+
+var BIN_ID  = '69c04ecbaa77b81da90b9120';
+var API_KEY = '$2a$10$/PVj5wfp1Tea7CnmdaeteO/srG2mzYsP9Gdy6mkqpG4H78XMyfb6.';
+var POLL_MS = 5000;
+var isSaving = false;
+var pollTimer = null;
+
+function setStatus(ok) {
+  var dot = document.getElementById('sync-dot');
+  var ts  = document.getElementById('sync-ts');
+  if (dot) dot.style.background = ok ? '#8fbc8f' : '#e05050';
+  if (ts && ok) {
+    var n = new Date();
+    ts.textContent = 'synced ' +
+      n.getHours().toString().padStart(2,'0') + ':' +
+      n.getMinutes().toString().padStart(2,'0') + ':' +
+      n.getSeconds().toString().padStart(2,'0');
+  }
+}
+
+function applyCheckedToDOM() {
+  var els = document.querySelectorAll('.item');
+  for (var i = 0; i < els.length; i++) {
+    var id = els[i].dataset.id;
+    if (checked[id]) els[i].classList.add('done');
+    else             els[i].classList.remove('done');
+  }
+  updateProgress();
+}
+
+function load(callback) {
+  fetch('https://api.jsonbin.io/v3/b/' + BIN_ID + '/latest', {
+    headers: { 'X-Master-Key': API_KEY }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.record && data.record.checked) checked = data.record.checked;
+    setStatus(true);
+    if (callback) callback();
+  })
+  .catch(function() {
+    setStatus(false);
+    if (callback) callback();
+  });
+}
+
+function save() {
+  isSaving = true;
+  fetch('https://api.jsonbin.io/v3/b/' + BIN_ID, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
+    body: JSON.stringify({ checked: checked })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function() { setStatus(true);  isSaving = false; })
+  .catch(function() { setStatus(false); isSaving = false; });
+}
+
+function poll() {
+  fetch('https://api.jsonbin.io/v3/b/' + BIN_ID + '/latest', {
+    headers: { 'X-Master-Key': API_KEY }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.record && data.record.checked) {
+      checked = data.record.checked;
+      applyCheckedToDOM();
+    }
+    setStatus(true);
+  })
+  .catch(function() { setStatus(false); });
+}
+
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(function() { if (!isSaving) poll(); }, POLL_MS);
+}
+
+// ── PROGRESS ─────────────────────────────────────────────────────────────────
+
+function updateProgress() {
+  var total = ITEMS.length, done = 0;
+  for (var i = 0; i < ITEMS.length; i++) { if (checked[ITEMS[i].id]) done++; }
+  document.getElementById('n-done').textContent = done;
+  document.getElementById('n-total').textContent = total;
+  document.getElementById('pbar').style.width = total ? Math.round(done / total * 100) + '%' : '0%';
+}
+
+// ── TOGGLE ───────────────────────────────────────────────────────────────────
+
+function toggleItem(id) {
+  checked[id] = !checked[id];
+  save();
+  var els = document.querySelectorAll('[data-id="' + id + '"]');
+  for (var i = 0; i < els.length; i++) {
+    if (checked[id]) els[i].classList.add('done');
+    else             els[i].classList.remove('done');
+  }
+  updateProgress();
+}
+
+// ── RENDER HELPERS ────────────────────────────────────────────────────────────
+
+var tagLabels = { warn:'check', kitniot:'kitniot', meat:'meat', dairy:'dairy', parve:'parve', kp:'KP cert' };
+
+function tagHTML(tags) {
+  if (!tags || !tags.length) return '';
+  var h = '<div class="item-tags">';
+  for (var i = 0; i < tags.length; i++) h += '<span class="tag tag-' + tags[i] + '">' + (tagLabels[tags[i]] || tags[i]) + '</span>';
+  return h + '</div>';
+}
+
+function storeBadge(store) {
+  var labels = { kk:'Kosher Kingdom', tesco:'Tesco', ms:'M&S', butcher:'Butcher' };
+  return '<span class="item-store-badge badge-' + store + '">' + (labels[store] || store) + '</span>';
+}
+
+function makeItem(itemObj, showStore) {
+  var el = document.createElement('div');
+  el.className = 'item' + (checked[itemObj.id] ? ' done' : '');
+  el.dataset.id = itemObj.id;
+  el.innerHTML =
+    '<div class="cb"><span class="cb-tick">&#10003;</span></div>' +
+    '<div class="item-body">' +
+      '<div class="item-name">' + itemObj.n + '</div>' +
+      (itemObj.d ? '<div class="item-note">' + itemObj.d + '</div>' : '') +
+      (showStore ? storeBadge(itemObj.store) : '') +
+      tagHTML(itemObj.t) +
+    '</div>';
+  el.onclick = (function(id){ return function(){ toggleItem(id); }; })(itemObj.id);
+  return el;
+}
+
+function makeCollapseToggler(c) { return function() { c.classList.toggle('collapsed'); }; }
+
+// ── STORE VIEW ───────────────────────────────────────────────────────────────
+
+function renderStoreView() {
+  var container = document.getElementById('store-view');
+  container.innerHTML = '';
+  for (var si = 0; si < STORE_GROUPS.length; si++) {
+    var sd = STORE_GROUPS[si];
+    if (currentStoreFilter !== 'all' && sd.store !== currentStoreFilter) continue;
+    var allIds = [];
+    for (var gi = 0; gi < sd.groups.length; gi++) allIds = allIds.concat(sd.groups[gi].ids);
+    var stDone = 0;
+    for (var xi = 0; xi < allIds.length; xi++) if (checked[allIds[xi]]) stDone++;
+    var sec = document.createElement('div');
+    sec.className = 'section'; sec.dataset.store = sd.store;
+    var hdr = document.createElement('div');
+    hdr.className = 'section-hdr ' + sd.store;
+    hdr.innerHTML = '<div class="section-dot"></div><span>' + sd.label + '</span><span class="section-tally" id="stally-' + sd.store + '">' + stDone + '/' + allIds.length + '</span>';
+    sec.appendChild(hdr);
+    for (var gi2 = 0; gi2 < sd.groups.length; gi2++) {
+      var gd = sd.groups[gi2];
+      var grp = document.createElement('div'); grp.className = 'group';
+      var gh = document.createElement('div'); gh.className = 'group-hdr';
+      gh.innerHTML = '<span>' + gd.name + '</span><span class="group-arrow">&#9662;</span>';
+      gh.onclick = makeCollapseToggler(grp);
+      grp.appendChild(gh);
+      var gbody = document.createElement('div'); gbody.className = 'group-body';
+      for (var ii = 0; ii < gd.ids.length; ii++) {
+        var itm = ITEM_MAP[gd.ids[ii]];
+        if (itm) gbody.appendChild(makeItem(itm, false));
+      }
+      grp.appendChild(gbody); sec.appendChild(grp);
+    }
+    container.appendChild(sec);
+  }
+  updateProgress();
+}
+
+function filterStore(s) {
+  currentStoreFilter = s;
+  var tabs = document.querySelectorAll('.stab');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+  document.querySelector('.stab-' + (s === 'all' ? 'all' : s)).classList.add('active');
+  renderStoreView();
+}
+
+// ── MEAL VIEW ────────────────────────────────────────────────────────────────
+
+function renderMealView() {
+  var container = document.getElementById('meal-view');
+  container.innerHTML = '';
+  var dayOrder = ['fri01','wed01','fri03','sat04','sun05','mon06','tue07','wed08','thu09'];
+  var dayLabels = {
+    fri01:'Fri 28 Mar - Prep shopping', wed01:'Wed 1 Apr', fri03:'Fri 3 Apr',
+    sat04:'Sat 4 Apr', sun05:'Sun 5 Apr', mon06:'Mon 6 Apr',
+    tue07:'Tue 7 Apr', wed08:'Wed 8 Apr', thu09:'Thu 9 Apr'
+  };
+  for (var di = 0; di < dayOrder.length; di++) {
+    var dayId = dayOrder[di];
+    if (currentDayFilter !== 'all' && currentDayFilter !== dayId) continue;
+    var dayMeals = [];
+    for (var mi = 0; mi < MEALS.length; mi++) { if (MEALS[mi].day === dayId) dayMeals.push(MEALS[mi]); }
+    if (!dayMeals.length) continue;
+    var dayItemSet = {};
+    for (var mi2 = 0; mi2 < dayMeals.length; mi2++) {
+      for (var ii = 0; ii < dayMeals[mi2].items.length; ii++) dayItemSet[dayMeals[mi2].items[ii]] = true;
+    }
+    var dayIds = Object.keys(dayItemSet);
+    var dDone = 0;
+    for (var xi = 0; xi < dayIds.length; xi++) if (checked[dayIds[xi]]) dDone++;
+    var sec = document.createElement('div'); sec.className = 'section'; sec.dataset.day = dayId;
+    var hdr = document.createElement('div'); hdr.className = 'section-hdr day';
+    hdr.innerHTML = '<div class="section-dot"></div><span>' + dayLabels[dayId] + '</span><span class="section-tally">' + dDone + '/' + dayIds.length + '</span>';
+    sec.appendChild(hdr);
+    for (var mi3 = 0; mi3 < dayMeals.length; mi3++) {
+      var meal = dayMeals[mi3];
+      var card = document.createElement('div'); card.className = 'meal-card';
+      var ml = document.createElement('div'); ml.className = 'meal-label';
+      ml.innerHTML = '<span class="meal-label-txt">' + meal.slot + (meal.who ? '<span class="meal-label-who">' + meal.who + '</span>' : '') + '</span><span class="meal-arrow">&#9662;</span>';
+      ml.onclick = makeCollapseToggler(card);
+      card.appendChild(ml);
+      var mbody = document.createElement('div'); mbody.className = 'meal-body';
+      var seen = {};
+      for (var ii2 = 0; ii2 < meal.items.length; ii2++) {
+        var iid = meal.items[ii2];
+        if (seen[iid]) continue; seen[iid] = true;
+        var itm = ITEM_MAP[iid];
+        if (itm) mbody.appendChild(makeItem(itm, true));
+      }
+      card.appendChild(mbody); sec.appendChild(card);
+    }
+    container.appendChild(sec);
+  }
+  updateProgress();
+}
+
+function filterDay(d) {
+  currentDayFilter = d;
+  var tabs = document.querySelectorAll('.dtab');
+  for (var i = 0; i < tabs.length; i++) {
+    var oc = tabs[i].getAttribute('onclick');
+    tabs[i].classList.toggle('active', oc === "filterDay('" + d + "')");
+  }
+  renderMealView();
+}
+
+// ── VIEW SWITCH ───────────────────────────────────────────────────────────────
+
+function switchView(v) {
+  currentView = v;
+  document.getElementById('vt-store').classList.toggle('active', v === 'store');
+  document.getElementById('vt-meal').classList.toggle('active',  v === 'meal');
+  document.getElementById('store-tabs').classList.toggle('hidden', v !== 'store');
+  document.getElementById('day-tabs').classList.toggle('hidden',   v !== 'meal');
+  document.getElementById('store-view').classList.toggle('hidden', v !== 'store');
+  document.getElementById('meal-view').classList.toggle('hidden',  v !== 'meal');
+  if (v === 'meal') renderMealView();
+}
+
+// ── FAB ACTIONS ───────────────────────────────────────────────────────────────
+
+function resetAll() {
+  if (!confirm('Reset all checkboxes?')) return;
+  checked = {}; save();
+  var els = document.querySelectorAll('.item');
+  for (var i = 0; i < els.length; i++) els[i].classList.remove('done');
+  updateProgress();
+}
+
+function doneAll() {
+  if (currentView === 'store') {
+    for (var si = 0; si < STORE_GROUPS.length; si++) {
+      var sd = STORE_GROUPS[si];
+      if (currentStoreFilter !== 'all' && sd.store !== currentStoreFilter) continue;
+      for (var gi = 0; gi < sd.groups.length; gi++)
+        for (var ii = 0; ii < sd.groups[gi].ids.length; ii++) checked[sd.groups[gi].ids[ii]] = true;
+    }
+  } else {
+    for (var mi = 0; mi < MEALS.length; mi++) {
+      if (currentDayFilter !== 'all' && MEALS[mi].day !== currentDayFilter) continue;
+      for (var ii2 = 0; ii2 < MEALS[mi].items.length; ii2++) checked[MEALS[mi].items[ii2]] = true;
+    }
+  }
+  save();
+  var els = document.querySelectorAll('.item');
+  for (var i = 0; i < els.length; i++) { if (checked[els[i].dataset.id]) els[i].classList.add('done'); }
+  updateProgress();
+}
+
+// ── INSTALL BANNER ────────────────────────────────────────────────────────────
+
+(function() {
+  var ua = navigator.userAgent;
+  var isIOS     = /iphone|ipad|ipod/i.test(ua);
+  var isAndroid = /android/i.test(ua);
+  var isSafari  = /safari/i.test(ua) && !/crios|fxios|chrome/i.test(ua);
+  var el = document.getElementById('isteps');
+  if (isIOS && isSafari)  el.innerHTML = 'Tap the <strong>Share</strong> button at the bottom of Safari, then <strong>Add to Home Screen</strong>';
+  else if (isIOS)         el.innerHTML = 'Open this page in <strong>Safari</strong>, then tap Share &rarr; Add to Home Screen';
+  else if (isAndroid)     el.innerHTML = 'Tap the <strong>3-dot menu</strong> in Chrome, then <strong>Add to Home screen</strong>';
+  else                    el.innerHTML = 'iPhone: Safari &rarr; Share &rarr; Add to Home Screen &nbsp;|&nbsp; Android: Chrome menu &rarr; Add to Home screen';
+})();
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+
+load(function() {
+  renderStoreView();
+  startPolling();
+});
+</script>
+</body>
+</html>
