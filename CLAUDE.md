@@ -22,15 +22,21 @@ Single HTML file, no build step, GitHub Pages hosting.
 ## Credentials (in index.html)
 - JSONBin Master Key: $2a$10$/PVj5wfp1Tea7CnmdaeteO/srG2mzYsP9Gdy6mkqpG4H78XMyfb6.
 - JSONBin Bin ID: 69c04ecbaa77b81da90b9120
-- GitHub PAT (classic, repo scope): ghp_REDACTED_see_1Password
+- GitHub PAT: stored in the git remote URL of the local repo (passwordless push)
+
+## Local repo path
+C:\Users\alastair.livingston\OneDrive\Alastair's Documents\Claude\pesach-2026\
+
+This IS the working copy. Edit index.html here directly, then push.
 
 ## Deploy workflow
+```bash
+cd "C:/Users/alastair.livingston/OneDrive/Alastair's Documents/Claude/pesach-2026"
+git add index.html
+git commit -m "describe change"
+git push
 ```
-GH_TOKEN="ghp_REDACTED_see_1Password"
-WORK="/tmp/pesach-deploy"
-cp "C:/Users/alastair.livingston/OneDrive - Accenture/Downloads/pesach-shopping.html" "$WORK/index.html"
-cd "$WORK" && git add index.html && git commit -m "msg" && git push
-```
+No token needed — already embedded in the remote URL.
 
 ## Data model
 
